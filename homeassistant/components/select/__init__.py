@@ -89,7 +89,14 @@ class SelectEntity(Entity):
 
     def select_option(self, option: str | None) -> None:
         """Change the selected option."""
-        raise NotImplementedError()
+        if option not in self._attr_options:
+            options = ", ".join(self._attr_options)
+            _LOGGER.warning(
+                f"Invalid option: {option} (possible options: {options})",
+            )
+            return
+        self._attr_current_option = option
+        self.async_write_ha_state()
 
     async def async_select_option(self, option: str | None) -> None:
         """Change the selected option."""
